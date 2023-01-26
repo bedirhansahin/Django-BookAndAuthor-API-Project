@@ -1,5 +1,5 @@
-from pathlib import Path
 import os
+from pathlib import Path
 
 from dotenv import load_dotenv
 
@@ -20,6 +20,8 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     ##
     "rest_framework",
+    "rest_framework.authtoken",
+    "drf_spectacular",
     ##
     "user",
 ]
@@ -82,3 +84,23 @@ USE_TZ = True
 STATIC_URL = "static/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+REST_FRAMEWORK = {
+    # DATE and TIME format configures for rest_framework
+    'DATETIME_FORMAT': '%d/%m/%Y  %H:%M:%S',
+    'DATE_FORMAT': '%d/%m/%Y',
+    # SWAGGER DOC
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    # for the PAGINATION
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 10,
+    # for PERMISSION
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated'
+    ],
+}
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Books And Authors API',
+    'SERVER_INCLUDE_SCHEMA': False,
+}
