@@ -19,7 +19,7 @@ class UserCreateView(generics.CreateAPIView):
     serializer_class = UserCreateSerializer
 
 
-class UserManageView(generics.RetrieveUpdateAPIView):
+class UserManageView(generics.RetrieveUpdateDestroyAPIView):
     """Update or Retrieve own user"""
     serializer_class = UserManageSerializer
 

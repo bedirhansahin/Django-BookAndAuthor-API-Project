@@ -54,4 +54,11 @@ class UserManageSerializer(serializers.ModelSerializer):
     class Meta:
         model = get_user_model()
         # exclude = ['password', 'groups', 'user_permissions']
-        fields = ['first_name', 'last_name', 'email', 'is_active']
+        fields = ['first_name', 'last_name', 'email', 'password', 'is_active', 'date_joined', 'last_login']
+        extra_kwargs = {
+            'password': {'write_only': True},
+            'min_length': 4,
+            'required': True,
+            'date_joined': {'read_only': True},
+            'last_login': {'read_only': True}
+        }

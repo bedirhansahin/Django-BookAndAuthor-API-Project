@@ -5,15 +5,13 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APIClient
 
-LIST_USER_URL = reverse('api_user:list')
-
 
 def create_user(email='test@example.com', first_name='testname', password='pass1234'):
     """Create a new User"""
     return get_user_model().objects.create_user(email, first_name, password)
 
 
-class CreateAndListUserTests(TestCase):
+class CreateUserTests(TestCase):
 
     def setUp(self):
         self.client = APIClient()
@@ -61,8 +59,15 @@ class CreateAndListUserTests(TestCase):
         with self.assertRaises(ValueError):
             get_user_model().objects.create_user(
                 email='',
-                first_name='testname',
                 password='test1234')
+
+
+LIST_USER_URL = reverse('api_user:list')
+CREATE_USER_URL = reverse('api_user:create')
+ME_URL = reverse('api_user:me')
+
+
+class UserAPIViewTests(TestCase):
 
     def test_list_user_success(self):
         payload = {
@@ -78,3 +83,4 @@ class CreateAndListUserTests(TestCase):
         res = self.client.get(LIST_USER_URL, payload)
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
+
