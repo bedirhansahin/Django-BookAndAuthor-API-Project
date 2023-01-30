@@ -1,6 +1,11 @@
 from django.contrib.auth import get_user_model
 from django.test import TestCase
-from user import models
+from django.urls import reverse
+
+from rest_framework import status
+from rest_framework.test import APIClient
+
+LIST_USER_URL = reverse('api_user:list')
 
 
 def create_user(email='test@example.com', first_name='testname', password='pass1234'):
@@ -8,7 +13,10 @@ def create_user(email='test@example.com', first_name='testname', password='pass1
     return get_user_model().objects.create_user(email, first_name, password)
 
 
-class CreateUserTests(TestCase):
+class CreateAndListUserTests(TestCase):
+
+    def setUp(self):
+        self.client = APIClient()
 
     def test_email_normalized(self):
         email_examples = [
@@ -55,3 +63,18 @@ class CreateUserTests(TestCase):
                 email='',
                 first_name='testname',
                 password='test1234')
+
+    def test_list_user_success(self):
+        payload = {
+            'id': 1,
+            'first_name': 'testname',
+            'last_name': 'testlastname',
+            'email': 'test@example.com',
+            'is_active': 'True',
+            'is_staff': 'False',
+            'date_joined': '01/01/2000 00:00:00'
+
+        }
+        res = self.client.get(LIST_USER_URL, payload)
+
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
