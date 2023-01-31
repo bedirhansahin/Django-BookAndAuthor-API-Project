@@ -1,0 +1,84 @@
+from django.contrib.auth import get_user_model
+from django.test import TestCase
+from django.urls import reverse
+
+from rest_framework import status
+from rest_framework.test import APIClient
+
+
+LIST_USER_URL = reverse('api_user:list')
+CREATE_USER_URL = reverse('api_user:create')
+ME_URL = reverse('api_user:me')
+
+
+def create_user(**params):
+    """Create new user"""
+    return get_user_model().objects.create_user(**params)
+
+
+class PublicUserAPIViewTests(TestCase):
+
+    def setUp(self):
+        self.client = APIClient()
+
+    def test_list_user_success(self):
+        payload = {
+            'id': 1,
+            'first_name': 'testname',
+            'last_name': 'testlastname',
+            'email': 'test@example.com',
+            'is_active': 'True',
+            'is_staff': 'False',
+            'date_joined': '01/01/2000 00:00:00'
+
+        }
+        res = self.client.get(LIST_USER_URL, payload)
+
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+
+    def test_user_create_with_exist_email_error(self):
+        """if user create with an email that exist return error"""
+        payload = {
+            'email': 'test@example.com',
+            'password': 'testpass1234',
+            'first_name': 'testname'
+        }
+        create_user(**payload)
+        res = self.client.post(CREATE_USER_URL, payload)
+
+        self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_detail_me_error(self):
+        """Test see detail and updating the user profile"""
+        payload = {
+            'first_name': 'testname',
+            'password': 'newpass123'
+        }
+        res = self.client.patch(ME_URL, payload)
+
+        self.assertEqual(res.status_code, status.HTTP_403_FORBIDDEN)
+
+
+class PrivateUserAPIViewTests(TestCase):
+
+    def setUp(self):
+        self.user = get_user_model().objects.create_user(
+            email='test@example.com',
+            first_name='testname',
+            password='testpass1234'
+        )
+        self.client = APIClient()
+        self.client.force_authenticate(user=self.user)
+
+    def test_detail_me_success(self):
+        """Test see detail and updating the user profile"""
+        payload = {
+            'first_name': 'testname',
+            'password': 'newpass123'
+        }
+        res = self.client.patch(ME_URL, payload)
+
+        self.user.refresh_from_db()
+        self.assertEqual(self.user.first_name, payload['first_name'])
+        self.assertTrue(self.user.check_password, payload['password'])
+        self.assertEqual(res.status_code, status.HTTP_200_OK)

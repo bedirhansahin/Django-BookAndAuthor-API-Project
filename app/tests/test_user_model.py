@@ -6,15 +6,12 @@ from rest_framework import status
 from rest_framework.test import APIClient
 
 
-def create_user(email='test@example.com', first_name='testname', password='pass1234'):
-    """Create a new User"""
-    return get_user_model().objects.create_user(email, first_name, password)
+def create_user(email='test@example.com', password='testpass123', first_name='testname'):
+    """Create and Return a new user"""
+    return get_user_model().objects.create_user(email, password, first_name)
 
 
 class CreateUserTests(TestCase):
-
-    def setUp(self):
-        self.client = APIClient()
 
     def test_email_normalized(self):
         email_examples = [
@@ -28,7 +25,7 @@ class CreateUserTests(TestCase):
             user = get_user_model().objects.create_user(email=email, first_name='testname', password='test1234')
             self.assertEqual(user.email, normalized)
 
-    def test_create_user_successful(self):
+    def test_create_user_success(self):
         # Test Create User
         email = 'test@example.com'
         first_name = 'testname'
@@ -60,26 +57,3 @@ class CreateUserTests(TestCase):
             get_user_model().objects.create_user(
                 email='',
                 password='test1234')
-
-
-LIST_USER_URL = reverse('api_user:list')
-CREATE_USER_URL = reverse('api_user:create')
-ME_URL = reverse('api_user:me')
-
-
-class UserAPIViewTests(TestCase):
-
-    def test_list_user_success(self):
-        payload = {
-            'id': 1,
-            'first_name': 'testname',
-            'last_name': 'testlastname',
-            'email': 'test@example.com',
-            'is_active': 'True',
-            'is_staff': 'False',
-            'date_joined': '01/01/2000 00:00:00'
-
-        }
-        res = self.client.get(LIST_USER_URL, payload)
-
-        self.assertEqual(res.status_code, status.HTTP_200_OK)

@@ -94,10 +94,8 @@ REST_FRAMEWORK = {
     # for the PAGINATION
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     'PAGE_SIZE': 10,
-    # for PERMISSION
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticatedOrReadOnly'
-    ],
+    # for the PERMISSION
+    'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.AllowAny')
 }
 
 SPECTACULAR_SETTINGS = {
