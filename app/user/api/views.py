@@ -10,7 +10,7 @@ from user.api.serializers import UserListSerializer, UserCreateSerializer, UserM
 class UserListView(generics.ListAPIView):
     User = get_user_model()
     serializer_class = UserListSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [permissions.IsAuthenticated]
     # queryset = User.objects.all().filter(~Q(first_name='')).order_by('id')
 
     def get_queryset(self):

@@ -12,23 +12,12 @@ class UserListSerializer(serializers.ModelSerializer):
 
 
 class UserCreateSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(
-        style={
-            'placeholder': 'Password',
-            'input_type': 'password'
-        }
-    )
 
     class Meta:
         model = get_user_model()
         fields = ['first_name', 'email', 'password']
-        extra_kwargs = {
-            'password': {'write_only': True},
-            'min_length': 4,
-            'required': True,
-
-        }
-
+        extra_kwargs = {'password': {'write_only': True, 'min_length': 6}}
+        
     def create(self, validated_data):
         user = User(
             first_name=validated_data['first_name'],
