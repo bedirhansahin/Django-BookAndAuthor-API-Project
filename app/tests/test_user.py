@@ -83,4 +83,3 @@ class UserAPIViewTests(TestCase):
         res = self.client.get(LIST_USER_URL, payload)
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
-
