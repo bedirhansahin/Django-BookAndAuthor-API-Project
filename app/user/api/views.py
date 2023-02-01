@@ -1,10 +1,10 @@
-from rest_framework import generics, authentication, permissions
-
-
 from django.contrib.auth import get_user_model
 from django.db.models import Q  # For the Django queryset filter not equal
-
-from user.api.serializers import UserListSerializer, UserCreateSerializer, UserManageSerializer
+from rest_framework import authentication, generics, permissions
+from rest_framework.authtoken import views
+from rest_framework.settings import api_settings
+from user.api.serializers import (AuthTokenSerializer, UserCreateSerializer,
+                                  UserListSerializer, UserManageSerializer)
 
 
 class UserListView(generics.ListAPIView):
@@ -25,7 +25,15 @@ class UserCreateView(generics.CreateAPIView):
 class UserManageView(generics.RetrieveUpdateDestroyAPIView):
     """Update or Retrieve own user"""
     serializer_class = UserManageSerializer
+    authentication_classes = [authentication.TokenAuthentication]
     permission_classes = [permissions.IsAuthenticated]
 
     def get_object(self):
         return self.request.user
+
+
+class TokenCreateView(views.ObtainAuthToken):
+    """Create a new token for authenticate the user"""
+    serializer_class = AuthTokenSerializer
+    # permission_classes = [permissions.IsAuthenticated]
+    renderer_classes = api_settings.DEFAULT_RENDERER_CLASSES

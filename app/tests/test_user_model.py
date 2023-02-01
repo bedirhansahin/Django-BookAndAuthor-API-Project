@@ -58,4 +58,3 @@ class CreateUserTests(TestCase):
                 email='',
                 password='test1234',
                 first_name='testname')
-

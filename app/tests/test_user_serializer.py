@@ -1,14 +1,13 @@
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse
-
 from rest_framework import status
 from rest_framework.test import APIClient
-
 
 LIST_USER_URL = reverse('api_user:list')
 CREATE_USER_URL = reverse('api_user:create')
 ME_URL = reverse('api_user:me')
+TOKEN_URL = reverse('api_user:token')
 
 
 def create_user(**params):
@@ -32,7 +31,6 @@ class PublicUserAPIViewTests(TestCase):
         self.assertEqual(res.status_code, status.HTTP_201_CREATED)
         user = get_user_model().objects.get(email=payload['email'])
         self.assertTrue(user.check_password(payload['password']))
-            
 
     def test_user_create_with_exist_email_error(self):
         """if user create with an email that exist return error"""
@@ -57,8 +55,7 @@ class PublicUserAPIViewTests(TestCase):
 
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
         user_exists = get_user_model().objects.filter(
-            email=payload['email']
-            ).exists()
+            email=payload['email']).exists()
         self.assertFalse(user_exists)
 
     def test_detail_me_error(self):
@@ -70,6 +67,48 @@ class PublicUserAPIViewTests(TestCase):
         res = self.client.patch(ME_URL, payload)
 
         self.assertEqual(res.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_create_token_success(self):
+        user_details = {
+            'first_name': 'testname',
+            'email': 'test@example.com',
+            'password': 'testpass1234',
+        }
+        create_user(**user_details)
+
+        payload = {
+            'email': user_details['email'],
+            'password': user_details['password']
+        }
+        res = self.client.post(TOKEN_URL, payload)
+
+        self.assertIn('token', res.data)
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+
+    def test_create_token_bad_credentials(self):
+        """Test return error if credentials invalid"""
+        create_user(email='test@example.com', password='goodpass')
+
+        payload = {
+            'email': 'test@example.com',
+            'password': 'bad'
+        }
+        res = self.client.post(TOKEN_URL, payload)
+
+        self.assertNotIn('token', res.data)
+        self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_create_token_blank_password(self):
+        """Test posting a blank password returns an error"""
+        payload = {
+            'email': 'test@example.com',
+            'password': '',
+        }
+        res = self.client.post(TOKEN_URL, payload)
+
+        self.assertNotIn('token', res.data)
+        self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
+
 
 class PrivateUserAPIViewTests(TestCase):
 
@@ -108,4 +147,3 @@ class PrivateUserAPIViewTests(TestCase):
         self.assertEqual(self.user.first_name, payload['first_name'])
         self.assertTrue(self.user.check_password, payload['password'])
         self.assertEqual(res.status_code, status.HTTP_200_OK)
-    
