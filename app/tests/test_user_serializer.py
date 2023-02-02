@@ -66,7 +66,7 @@ class PublicUserAPIViewTests(TestCase):
         }
         res = self.client.patch(ME_URL, payload)
 
-        self.assertEqual(res.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(res.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_create_token_success(self):
         user_details = {

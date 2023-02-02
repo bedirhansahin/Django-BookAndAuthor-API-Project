@@ -10,6 +10,7 @@ from user.api.serializers import (AuthTokenSerializer, UserCreateSerializer,
 class UserListView(generics.ListAPIView):
     User = get_user_model()
     serializer_class = UserListSerializer
+    authentication_classes = [authentication.TokenAuthentication]
     permission_classes = [permissions.IsAuthenticated]
     # queryset = User.objects.all().filter(~Q(first_name='')).order_by('id')
 
@@ -35,5 +36,5 @@ class UserManageView(generics.RetrieveUpdateDestroyAPIView):
 class TokenCreateView(views.ObtainAuthToken):
     """Create a new token for authenticate the user"""
     serializer_class = AuthTokenSerializer
-    # permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
     renderer_classes = api_settings.DEFAULT_RENDERER_CLASSES
