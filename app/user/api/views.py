@@ -36,5 +36,4 @@ class UserManageView(generics.RetrieveUpdateDestroyAPIView):
 class TokenCreateView(views.ObtainAuthToken):
     """Create a new token for authenticate the user"""
     serializer_class = AuthTokenSerializer
-    permission_classes = [permissions.IsAuthenticated]
     renderer_classes = api_settings.DEFAULT_RENDERER_CLASSES
