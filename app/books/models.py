@@ -18,7 +18,6 @@ class Author(models.Model):
     name = models.CharField(max_length=100, null=True)
     date_of_birth = models.DateField()
     country = models.CharField(max_length=255)
-    books = models.ManyToManyField('Book', related_name='books')
 
     def __str__(self):
         return self.name
@@ -26,7 +25,7 @@ class Author(models.Model):
 
 class Book(models.Model):
     name = models.CharField(max_length=100, null=True)
-    author = models.ForeignKey(Author, on_delete=models.CASCADE)
+    author = models.ManyToManyField(Author)
     category = models.ManyToManyField(Category)
     summary = models.TextField()
 

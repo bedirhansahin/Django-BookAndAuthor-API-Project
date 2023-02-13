@@ -12,7 +12,7 @@ class CategoryAdmin(admin.ModelAdmin):
 
 @admin.register(Book)
 class BookAdmin(admin.ModelAdmin):
-    list_display = ['name', 'author']
+    list_display = ['name']
     ordering = ['name']
     search_fields = ['name', 'author', 'category']
 
@@ -21,4 +21,4 @@ class BookAdmin(admin.ModelAdmin):
 class AuthorAdmin(admin.ModelAdmin):
     list_display = ['name', 'country']
     ordering = ['name']
-    search_fields = ['name', 'books']
+    search_fields = ['name']

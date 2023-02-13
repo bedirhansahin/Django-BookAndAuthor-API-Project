@@ -75,33 +75,32 @@ class BookViewSet(viewsets.ModelViewSet):
 
         return self.serializer_class
 
-    def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
 
 
-@extend_schema_view(
-    list=extend_schema(
-        parameters=[
-            OpenApiParameter(
-                'assigned_only',
-                OpenApiTypes.INT, enum=[0, 1],
-                description='Filter by items assigned to recipes.'
-            )
-        ]
-    )
-)
-class BaseBookAttributesViewSet(mixins.UpdateModelMixin, mixins.DestroyModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet,):
-    """Base Viewset for another viewsets"""
-    authentication_classes = [authentication.TokenAuthentication]
-    permission_classes = [permissions.IsAuthenticated]
 
-    def get_queryset(self):
-        """Filter queryset to authenticated user."""
-        assigned_only = bool(
-            int(self.request.query_params.get('assigned_only', 0))
-        )
-        queryset = self.queryset
-        if assigned_only:
-            queryset = queryset.filter(book__isnull=False)
+# @extend_schema_view(
+#     list=extend_schema(
+#         parameters=[
+#             OpenApiParameter(
+#                 'assigned_only',
+#                 OpenApiTypes.INT, enum=[0, 1],
+#                 description='Filter by items assigned to recipes.'
+#             )
+#         ]
+#     )
+# )
+# class BaseBookAttributesViewSet(mixins.UpdateModelMixin, mixins.DestroyModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet,):
+#     """Base Viewset for another viewsets"""
+#     authentication_classes = [authentication.TokenAuthentication]
+#     permission_classes = [permissions.IsAuthenticated]
 
-        return queryset.filter(user=self.request.user).order_by('-name').distinct()
+#     def get_queryset(self):
+#         """Filter queryset to authenticated user."""
+#         assigned_only = bool(
+#             int(self.request.query_params.get('assigned_only', 0))
+#         )
+#         queryset = self.queryset
+#         if assigned_only:
+#             queryset = queryset.filter(book__isnull=False)
+
+#         return queryset.filter(user=self.request.user).order_by('-name').distinct()

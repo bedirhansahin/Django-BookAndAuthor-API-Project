@@ -21,7 +21,7 @@ class AuthorSerializer(serializers.ModelSerializer):
 class AuthorDetailSerializer(AuthorSerializer):
     """Serializers for author details"""
     class Meta(AuthorSerializer.Meta):
-        fields = AuthorSerializer.Meta.fields + ['date_of_birth', 'country', 'books']
+        fields = AuthorSerializer.Meta.fields + ['date_of_birth', 'country']
 
 
 class BookSerializer(serializers.ModelSerializer):
