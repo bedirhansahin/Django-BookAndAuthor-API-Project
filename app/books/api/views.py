@@ -6,9 +6,3 @@ from rest_framework.settings import api_settings
 from books.api.serializers import BookListSerializer
 from books.models import Book
 
-
-class BookListView(generics.ListAPIView):
-    serializer_class = BookListSerializer
-    # authentication_classes = [authentication.TokenAuthentication]
-    permission_classes = [permissions.IsAuthenticated]
-    queryset = Book.objects.all().order_by('id')
