@@ -17,6 +17,14 @@ class CategoryViewSet(viewsets.ModelViewSet):
     authentication_classes = [authentication.TokenAuthentication]
     permission_classes = [permissions.IsAuthenticated]
 
+    def get_queryset(self):
+        return self.queryset.filter(
+            user=self.request.user
+        ).order_by('id').distinct()
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
 
 class AuthorViewSet(viewsets.ModelViewSet):
     serializer_class = AuthorDetailSerializer
@@ -74,6 +82,9 @@ class BookViewSet(viewsets.ModelViewSet):
             return BookSerializer
 
         return self.serializer_class
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
 
 
 

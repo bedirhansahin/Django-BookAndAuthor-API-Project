@@ -4,7 +4,8 @@ from django.utils.translation import gettext_lazy as _
 
 
 class Category(models.Model):
-    name = models.CharField(max_length=100, null=True)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING)
+    name = models.CharField(max_length=100)
 
     class Meta:
         verbose_name_plural = 'Categories'
@@ -15,7 +16,7 @@ class Category(models.Model):
 
 class Author(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING)
-    name = models.CharField(max_length=100, null=True)
+    name = models.CharField(max_length=100)
     books = models.ManyToManyField('Book', related_name='book')
     date_of_birth = models.DateField()
     country = models.CharField(max_length=255)
@@ -25,7 +26,7 @@ class Author(models.Model):
 
 
 class Book(models.Model):
-    name = models.CharField(max_length=100, null=True)
+    name = models.CharField(max_length=100)
     author = models.ManyToManyField(Author)
     category = models.ManyToManyField(Category)
     summary = models.TextField()
