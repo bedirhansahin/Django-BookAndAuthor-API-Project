@@ -22,7 +22,8 @@ def create_author(user, **params):
     defaults = {
         'name': 'testauthor',
         'date_of_birth': '2023-01-01',
-        'country': 'Turkey'
+        'country': 'Turkey',
+        'biography': 'Some Biography staff'
     }
     defaults.update(params)
 
@@ -73,12 +74,14 @@ class PrivateAuthorAPITests(TestCase):
             user=self.user,
             name='testAuthor',
             date_of_birth='2023-01-01',
-            country='Turkey'
+            country='Turkey',
+            biography='Test Biography'
         )
         payload = {
             'name': 'testAuthorUpdate',
             'date_of_birth': '2023-01-02',
-            'country': 'Spain'
+            'country': 'Spain',
+            'biography': 'New Biography'
         }
         
         url = detail_author_url(author.id)
@@ -86,8 +89,7 @@ class PrivateAuthorAPITests(TestCase):
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         author.refresh_from_db()
-        for k, v in payload.items():
-            self.assertEqual(author.user, self.user)
+        self.assertEqual(author.user, self.user)
 
     def test_partial_update_author(self):
         name = 'Test Author Update'
