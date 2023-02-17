@@ -110,8 +110,7 @@ class PrivateBookAPITests(TestCase):
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         book.refresh_from_db()
-        for k, v in payload.items():
-            self.assertEqual(book.user, self.user)
+        self.assertEqual(book.user, self.user)
 
     def test_partial_update_book(self):
         summary = 'testSummary'

@@ -17,9 +17,9 @@ class Category(models.Model):
 class Author(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING)
     name = models.CharField(max_length=100)
-    books = models.ManyToManyField('Book', related_name='book', blank=True)
     date_of_birth = models.DateField()
     country = models.CharField(max_length=255)
+    biography = models.TextField()
 
     def __str__(self):
         return self.name
