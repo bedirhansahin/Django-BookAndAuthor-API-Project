@@ -29,6 +29,19 @@ and you can go to [http://127.0.0.1:8090/api/docs/](http://127.0.0.1:8090/api/do
 
 :warning: **Don't forget install Docker on your computer**:
 
+:warning: **Create an .env file in the directory where dockerfile is and create SECRET_KEY into it**:
+
+## To Generate a Secret Key:
+- Open Shell
+```
+docker-compose run --rm app sh -c "python manage.py shell"
+```
+- Run the following commands
+```
+from django.core.management.utils import get_random_secret_key
+print(get_random_secret_key())
+```
+- The env file seem like this ----> SECRET_KEY=SECRET_KEY=hn1lda#wg0!o#=x*355^!co(6b=27%$=t-x)wb0o
 
 ## You can:
 
